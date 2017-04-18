@@ -26,7 +26,111 @@ def naked_twins(values):
 
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
+    dual_values = [box for box in values.keys() if len(values[box]) == 2]
+    for box in dual_values:
+        #check rows for equivalent boxes
+        for row_boxes in row_dict[box]:
+            if values[row_boxes] == values[box]:
+
+                digit_1 = values[box][0]
+                digit_2 = values[box][1]
+                
+                modified_row = list(row_dict[box])
+                modified_row.remove(row_boxes) #we do not want to remove the values from naked twins
+                for modified in modified_row:
+                    if len(values[modified]) == 1:
+                        modified_row.remove(modified)
+                
+                for row_boxes_2 in modified_row:
+                    #modify row_boxes_2 but do not modify row_boxes
+                    try:
+                        values[row_boxes_2] = values[row_boxes_2].replace(digit_1,'')
+                    except:
+                        pass
+                    try:
+                        values[row_boxes_2] = values[row_boxes_2].replace(digit_2,'')
+                    except:
+                        pass
+
+
+        #now check columns
+        for column_boxes in column_dict[box]:
+            if values[column_boxes] == values[box]:
+
+                digit_1 = values[box][0]
+                digit_2 = values[box][1]
+                
+                modified_column = list(column_dict[box])
+                modified_column.remove(column_boxes) #we do not want to remove the values from naked twins
+                for modified in modified_column:
+                    if len(values[modified]) == 1:
+                        modified_column.remove(modified)                
+                
+                for column_boxes_2 in modified_column:
+                    #modify row_boxes_2 but do not modify column_boxes
+                    try:
+                        values[column_boxes_2] = values[column_boxes_2].replace(digit_1,'')
+                    except:
+                        pass
+                    try:
+                        values[column_boxes_2] = values[column_boxes_2].replace(digit_2,'')
+                    except:
+                        pass
+
+       
+        #now check 3x3 squares
+        for square_boxes in square_dict[box]:
+            if values[square_boxes] == values[box]:
+
+                digit_1 = values[box][0]
+                digit_2 = values[box][1]
+                
+                modified_square = list(square_dict[box])
+                modified_square.remove(square_boxes) #we do not want to remove the values from naked twins
+                for modified in modified_square:
+                    if len(values[modified]) == 1:
+                        modified_square.remove(modified)                
+                
+                for square_boxes_2 in modified_square:
+                    #modify row_boxes_2 but do not modify square_boxes
+                    try:
+                        values[square_boxes_2] = values[square_boxes_2].replace(digit_1,'')
+                    except:
+                        pass
+                    try:
+                        values[square_boxes_2] = values[square_boxes_2].replace(digit_2,'')
+                    except:
+                        pass
+
+                    
+        #finally check diagonals
+        try:
+            for diagonal_boxes in diagonal_dict[box]:
+                if values[diagonal_boxes] == values[box]:
     
+                    digit_1 = values[box][0]
+                    digit_2 = values[box][1]
+                    
+                    modified_diagonal = list(diagonal_dict[box])
+                    modified_diagonal.remove(diagonal_boxes) #we do not want to remove the values from naked twins
+                    for modified in modified_diagonal:
+                        if len(values[modified]) == 1:
+                            modified_diagonal.remove(modified)                 
+                    
+                    for diagonal_boxes_2 in modified_diagonal:
+                        #modify row_boxes_2 but do not modify diagonal_boxes
+                        try:
+                            values[diagonal_boxes_2] = values[diagonal_boxes_2].replace(digit_1,'')
+                        except:
+                            pass
+                        try:
+                            values[diagonal_boxes_2] = values[diagonal_boxes_2].replace(digit_2,'')
+                        except:
+                            pass
+        except:
+            pass
+
+    return values
 
 def cross(A, B):
     "Cross product of elements in A and elements in B."
@@ -41,14 +145,46 @@ cols = '123456789'
 boxes = cross(rows, cols)
 
 row_units = [cross(r, cols) for r in rows]
+row_dict = dict()
+for s in boxes:
+    for row in row_units:
+        if s in row:
+            row_modified = list(row)
+            row_modified.remove(s)
+            row_dict[s] = row_modified
+
 column_units = [cross(rows, c) for c in cols]
+column_dict = dict()
+for s in boxes:
+    for column in column_units:
+        if s in column:
+            column_modified = list(column)
+            column_modified.remove(s)
+            column_dict[s] = column_modified
+
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
+square_dict = dict()
+for s in boxes:
+    for square in square_units:
+        if s in square:
+            square_modified = list(square)
+            square_modified.remove(s)
+            square_dict[s] = square_modified
+
 diagonal_units = [['A1', 'B2', 'C3', 'D4', 'E5', 'F6', 'G7', 'H8', 'I9'], ['I1', 'H2', 'G3', 
                   'F4', 'E5', 'D6', 'C7', 'B8', 'A9']]
-                  
+diagonal_dict = dict()
+for s in boxes:
+    for diagonal in diagonal_units:
+        if s in diagonal:
+            diagonal_modified = list(diagonal)
+            diagonal_modified.remove(s)
+            diagonal_dict[s] = diagonal_modified
+
 #unitlist = row_units + column_units + square_units
 unitlist_diag = row_units + column_units + square_units + diagonal_units
 
+#for non-diagonal versions of sudoku
 #units = dict()
 #for s in boxes:
 #    units[s] = []
@@ -63,6 +199,7 @@ for s in boxes:
         if s in u:
             units_diag[s].append(u)
 
+#for non-diagonal versions of sudoku
 #peers = dict()
 #for s in boxes:
 #    peer_list = []
@@ -122,16 +259,11 @@ def eliminate(values):
     """
     Look through the peers and adjust the values i the 'values' dictionary
     """    
-    solved_values = []    
-    for box in values.keys:
-        if len(box) == 1:
-            solved_values.append(box)
-        
+    solved_values = [box for box in values.keys() if len(values[box]) == 1]
     for box in solved_values:
         digit = values[box]
         for peer in peers_diag[box]:
             values[peer] = values[peer].replace(digit,'')
-            
     return values
 
 def only_choice(values):
@@ -150,6 +282,8 @@ def reduce_puzzle(values):
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
         # Use the Eliminate Strategy
         values = eliminate(values)
+        # Use the Naked Twins Strategy
+        values = naked_twins(values)
         # Use the Only Choice Strategy
         values = only_choice(values)
         # Check how many boxes have a determined value, to compare
@@ -186,7 +320,9 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
-    return search(grid)
+    puzzle = grid_values(grid)
+    puzzle_searched = search(puzzle)
+    return search(puzzle)
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
