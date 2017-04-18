@@ -32,8 +32,11 @@ def naked_twins(values):
         for row_boxes in row_dict[box]:
             if values[row_boxes] == values[box]:
 
-                digit_1 = values[box][0]
-                digit_2 = values[box][1]
+                try:
+                    digit_1 = values[box][0]
+                    digit_2 = values[box][1]
+                except:
+                    pass
                 
                 modified_row = list(row_dict[box])
                 modified_row.remove(row_boxes) #we do not want to remove the values from naked twins
@@ -57,8 +60,11 @@ def naked_twins(values):
         for column_boxes in column_dict[box]:
             if values[column_boxes] == values[box]:
 
-                digit_1 = values[box][0]
-                digit_2 = values[box][1]
+                try:
+                    digit_1 = values[box][0]
+                    digit_2 = values[box][1]
+                except:
+                    pass
                 
                 modified_column = list(column_dict[box])
                 modified_column.remove(column_boxes) #we do not want to remove the values from naked twins
@@ -82,8 +88,11 @@ def naked_twins(values):
         for square_boxes in square_dict[box]:
             if values[square_boxes] == values[box]:
 
-                digit_1 = values[box][0]
-                digit_2 = values[box][1]
+                try:
+                    digit_1 = values[box][0]
+                    digit_2 = values[box][1]
+                except:
+                    pass
                 
                 modified_square = list(square_dict[box])
                 modified_square.remove(square_boxes) #we do not want to remove the values from naked twins
@@ -108,8 +117,11 @@ def naked_twins(values):
             for diagonal_boxes in diagonal_dict[box]:
                 if values[diagonal_boxes] == values[box]:
     
-                    digit_1 = values[box][0]
-                    digit_2 = values[box][1]
+                    try:
+                        digit_1 = values[box][0]
+                        digit_2 = values[box][1]
+                    except:
+                        pass
                     
                     modified_diagonal = list(diagonal_dict[box])
                     modified_diagonal.remove(diagonal_boxes) #we do not want to remove the values from naked twins
