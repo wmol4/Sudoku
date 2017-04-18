@@ -3,11 +3,11 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: If there are two equivalent boxes with two elements each in a row, column, 3x3 square, or diagonal, then we know that other boxes in those rows, columns, 3x3 squares, and diagonals are able to contain either of the two elements. However, we can use constraint propagation to make this more efficient. For instance, rather than looking at every spot on the grid, we can reduce the search space to only grid spaces that have two elements each. Essentially, it's important to find twins on the board.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: This is very similar to eliminating values on rows, columns, and 3x3 squares. However, if we add in the constraint that along the two major diagonals of the board must exist values 1-9, then we can also apply all of the other techniques to this new search space. For instance, we can use only_choice, elimination, or naked_twins along the two diagonals of the sudoku board.
 
 ### Install
 
